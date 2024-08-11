@@ -2,6 +2,7 @@ package com.example.diplomm.service;
 import com.example.diplomm.repository.FileRepository;
 import com.example.diplomm.repository.UserRepository;
 import com.example.diplomm.users.FileInfo;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,6 +13,8 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Service
 public class FileService {
@@ -27,14 +30,19 @@ public class FileService {
     @Transactional
     public FileInfo uploadFile(MultipartFile file, Long userId) throws IOException {
         String filename = file.getOriginalFilename();
-        String path = saveFileToLocal(file);
 
         FileInfo fileInfo = new FileInfo();
         fileInfo.setFilename(filename);
-        fileInfo.setPath(path);
         fileInfo.setUserId(userId);
+        fileInfo = fileRepository.save(fileInfo);
 
-        return fileRepository.save(fileInfo);
+        String path = "files/" + file.getOriginalFilename();
+        fileInfo.setPath(path);
+        fileRepository.save(fileInfo);
+
+        Files.copy(file.getInputStream(), Paths.get(path));
+
+        return fileInfo;
     }
 
     @Transactional(readOnly = true)
@@ -59,10 +67,11 @@ public class FileService {
     }
 
     private void deleteFileFromLocal(String path) {
+        Logger logger = LoggerFactory.getLogger(FileService.class);
         try {
             Files.deleteIfExists(Paths.get(path));
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Ошибка при удалении файла: ", path, e);
         }
     }
 }
