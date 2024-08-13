@@ -11,16 +11,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(WebConfig.class)
-    public class WebConfigTest {
+public class WebConfigTest {
 
-        @Autowired
-        private MockMvc mockMvc;
+    @Autowired
+    private MockMvc mockMvc;
 
-        @Test
-        public void testCorsConfiguration() throws Exception {
-            mockMvc.perform(MockMvcRequestBuilders.get("/api/test")
-                            .header("Origin", "http://localhost:8081"))
-                    .andExpect(status().isOk())
-                    .andExpect(header().string("Access-Control-Allow-Origin", "http://localhost:8081"));
-        }
+    @Test
+    public void testCorsConfiguration() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/test")
+                        .header("Origin", "http://localhost:8081"))
+                .andExpect(status().isOk())
+                .andExpect(header().string("Access-Control-Allow-Origin", "http://localhost:8081"));
     }
+}

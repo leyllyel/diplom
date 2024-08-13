@@ -1,4 +1,5 @@
 package com.example.diplomm.adapter;
+
 import com.example.diplomm.repository.UserRepository;
 import com.example.diplomm.users.User;
 import org.springframework.beans.factory.annotation.Autowired;

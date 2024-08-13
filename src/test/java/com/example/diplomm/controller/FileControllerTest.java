@@ -43,35 +43,36 @@ public class FileControllerTest {
                 .andExpect(status().isCreated())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(1));
     }
-        @Test
-        public void testGetFilesByUser() throws Exception {
-            // Создаем тестовые данные
-            FileInfo file1 = new FileInfo();
-            file1.setId(1L);
-            FileInfo file2 = new FileInfo();
-            file2.setId(2L);
-            List<FileInfo> files = new ArrayList<>();
-            files.add(file1);
-            files.add(file2);
 
-            // Задаем mock-поведение для FileService
-            when(fileService.getFilesByUser(1L)).thenReturn(files);
+    @Test
+    public void testGetFilesByUser() throws Exception {
+        // Создаем тестовые данные
+        FileInfo file1 = new FileInfo();
+        file1.setId(1L);
+        FileInfo file2 = new FileInfo();
+        file2.setId(2L);
+        List<FileInfo> files = new ArrayList<>();
+        files.add(file1);
+        files.add(file2);
 
-            // Отправляем запрос на получение файлов для пользователя
-            mockMvc.perform(MockMvcRequestBuilders.get("/api/files/1")
-                            .accept(MediaType.APPLICATION_JSON))
-                    .andExpect(status().isOk())
-                    .andExpect(MockMvcResultMatchers.jsonPath("$[0].id").value(1))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$[1].id").value(2));
-        }
+        // Задаем mock-поведение для FileService
+        when(fileService.getFilesByUser(1L)).thenReturn(files);
 
-        @Test
-        public void testDeleteFile() throws Exception {
-            // Задаем mock-поведение для FileService
-            doNothing().when(fileService).deleteFile(1L);
-
-            // Отправляем запрос на удаление файла
-            mockMvc.perform(MockMvcRequestBuilders.delete("/api/files/1"))
-                    .andExpect(status().isNoContent());
-        }
+        // Отправляем запрос на получение файлов для пользователя
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/files/1")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].id").value(1))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[1].id").value(2));
     }
+
+    @Test
+    public void testDeleteFile() throws Exception {
+        // Задаем mock-поведение для FileService
+        doNothing().when(fileService).deleteFile(1L);
+
+        // Отправляем запрос на удаление файла
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/files/1"))
+                .andExpect(status().isNoContent());
+    }
+}
